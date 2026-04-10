@@ -85,3 +85,43 @@ La progression et les directives sont suivies dans ce tableau de bord.
 ---
 
 *Derniere mise a jour : Juin 2026*
+
+---
+
+## Publier ce repo sur ton GitHub
+
+Si le repo n'apparait pas sur ton compte GitHub, il faut le pousser vers un remote `origin`.
+
+```bash
+git remote -v
+```
+
+Si aucun `origin` n'est configure, cree un repo vide sur GitHub puis execute:
+
+```bash
+git remote add origin https://github.com/<ton-user>/<ton-repo>.git
+git branch -M main
+git push -u origin main
+```
+
+Si `origin` existe deja mais que rien n'est en ligne, pousse simplement la branche courante:
+
+```bash
+git push -u origin $(git branch --show-current)
+```
+
+Tu peux ensuite verifier sur la page GitHub du repo que le fichier `06-workflows/workflow-drop.html` est bien present.
+
+### Recuperer l'URL source du repo
+
+Pour connaitre l'URL source (remote) configuree localement:
+
+```bash
+git remote get-url origin
+```
+
+Si la commande echoue, cela signifie qu'aucune URL source n'est configuree. Dans ce cas, ajoute-la avec:
+
+```bash
+git remote add origin https://github.com/<ton-user>/<ton-repo>.git
+```
