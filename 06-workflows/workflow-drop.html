@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workflow Drag & Drop</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #22c55e;
+      --accent-soft: #14532d;
+      --border: #374151;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top, #1e293b, var(--bg));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.4rem, 2.4vw, 2rem);
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .column {
+      background: color-mix(in srgb, var(--panel), black 15%);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      min-height: 300px;
+    }
+
+    .column h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: #cbd5e1;
+      letter-spacing: .01em;
+    }
+
+    .dropzone {
+      min-height: 240px;
+      border: 1px dashed transparent;
+      border-radius: 10px;
+      padding: 8px;
+      transition: .2s ease;
+    }
+
+    .dropzone.over {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent-soft), transparent 70%);
+    }
+
+    .task {
+      background: var(--card);
+      border: 1px solid #4b5563;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, .2);
+    }
+
+    .task:last-child { margin-bottom: 0; }
+
+    .task:active { cursor: grabbing; }
+
+    .task strong {
+      display: block;
+      font-size: .95rem;
+      margin-bottom: 4px;
+    }
+
+    .task small { color: var(--muted); }
+
+    .meta {
+      margin-top: 16px;
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-block;
+      background: #052e16;
+      color: #86efac;
+      border: 1px solid #166534;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-left: 6px;
+      font-size: .8rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Workflow Drag & Drop</h1>
+  <p>Glisse les étapes de ton workflow d'une colonne à l'autre.</p>
+
+  <section class="board" aria-label="Tableau workflow">
+    <article class="column">
+      <h2>À faire</h2>
+      <div class="dropzone" data-column="todo">
+        <div class="task" draggable="true" id="task-1">
+          <strong>Concevoir la maquette</strong>
+          <small>UI / UX</small>
+        </div>
+        <div class="task" draggable="true" id="task-2">
+          <strong>Écrire le HTML</strong>
+          <small>Front-end</small>
+        </div>
+      </div>
+    </article>
+
+    <article class="column">
+      <h2>En cours</h2>
+      <div class="dropzone" data-column="doing">
+        <div class="task" draggable="true" id="task-3">
+          <strong>Tester le drag & drop</strong>
+          <small>QA</small>
+        </div>
+      </div>
+    </article>
+
+    <article class="column">
+      <h2>Terminé</h2>
+      <div class="dropzone" data-column="done"></div>
+    </article>
+  </section>
+
+  <div class="meta">
+    Astuce: ce fichier est autonome (HTML/CSS/JS), prêt à versionner sur GitHub.
+    <span class="badge">workflow-drop.html</span>
+  </div>
+
+  <script>
+    const tasks = document.querySelectorAll('.task');
+    const zones = document.querySelectorAll('.dropzone');
+
+    tasks.forEach(task => {
+      task.addEventListener('dragstart', () => {
+        task.classList.add('dragging');
+      });
+      task.addEventListener('dragend', () => {
+        task.classList.remove('dragging');
+      });
+    });
+
+    zones.forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('over');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('over');
+      });
+
+      zone.addEventListener('drop', () => {
+        const dragging = document.querySelector('.dragging');
+        if (dragging) {
+          zone.appendChild(dragging);
+        }
+        zone.classList.remove('over');
+      });
+    });
+  </script>
+</body>
+</html>
